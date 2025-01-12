@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'dart:convert';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:myapp/authservice.dart';
@@ -23,6 +24,9 @@ class _DashboardPageState extends State<DashboardPage> {
   String _username = '';
   String _age = '';
   String _weight = '';
+  String _trainingData='';
+  String _height = '';
+  String _gender= '';
   double _waterProgress = 0.0;
   double _stepProgress = 0.0;
   int _waterConsumed = 0;
@@ -31,6 +35,8 @@ class _DashboardPageState extends State<DashboardPage> {
    int _stepsWalked =0;
 
   List<Map<String, dynamic>> _workoutProgressData = [];
+List<String> _messages = []; // Store chat messages
+  TextEditingController _chatController = TextEditingController();
 
   @override
   void initState() {
@@ -40,14 +46,188 @@ class _DashboardPageState extends State<DashboardPage> {
     _fetchStepstakeData();
     _fetchWorkoutProgressData();
   }
-  //  @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   _fetchUserProfile();
-  //   _fetchWaterIntakeData(); // Fetch water intake data on initialization
-  //   _fetchStepstakeData();
-  //   _fetchWorkoutProgressData();
-  // }
+// Method to show the floating chat window
+ 
+// Method to send the chat message to the backend
+void _showChatWindow(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (BuildContext context, setState) {
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Chat messages list
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: _messages.length,
+                    itemBuilder: (context, index) {
+                      return _buildMessageBubble(_messages[index], index % 2 == 0);
+                    },
+                  ),
+                ),
+                // Text input field
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _chatController,
+                        decoration: InputDecoration(
+                          hintText: 'Type a message...',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.send),
+                      onPressed: () {
+                        final userMessage = _chatController.text.trim();
+                        if (userMessage.isNotEmpty) {
+                          setState(() {
+                            // Add user message
+                            _messages.add('You: $userMessage');
+                            _chatController.clear();
+                            _messages.add('Assistant: '); // Placeholder for loading animation
+                          });
+                          _startLoadingAnimation(setState);
+                          _sendChatMessage(userMessage, setState);
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    },
+  );
+}
+
+// Start a continuous "Loading..." animation
+Timer? _loadingTimer;
+void _startLoadingAnimation(Function setState) {
+  const loadingText = "Loading...";
+  int currentIndex = 0;
+
+  _loadingTimer?.cancel(); // Cancel any previous timer
+  _loadingTimer = Timer.periodic(Duration(milliseconds: 200), (timer) {
+    setState(() {
+      if (_messages.isNotEmpty && _messages.last.startsWith("Assistant")) {
+        // Update the "Assistant: Loading..." animation
+        _messages[_messages.length - 1] = "Assistant: ${loadingText.substring(0, currentIndex + 1)}";
+        currentIndex = (currentIndex + 1) % loadingText.length; // Cycle through the letters
+      }
+    });
+  });
+}
+
+// Stop the loading animation when the response is ready
+void _stopLoadingAnimation(Function setState) {
+  _loadingTimer?.cancel();
+  _loadingTimer = null;
+}
+
+// Send chat message and handle response
+Future<void> _sendChatMessage(String message, Function setState) async {
+  final url = 'http://localhost:11434/api/generate';
+  final geminiurl='https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent'; // Your backend URL
+  final headers = {
+    'Content-Type': 'application/json',
+    'User-Agent': 'insomnia/10.3.0',
+  };
+  final geminiheaders={
+     'Content-Type': 'application/json', 
+    'x-goog-api-key': 'fff', 
+  };
+   _trainingData="Name is "+_username+" of gender " +_gender+" having  " +_weight+"kg weight and "+_height+"cm height and my age is "+_age+" so when ever you are doing something keep this in mind. Your name is FitAI and you mother tongue is english. You are a fitness coach, medical professional, registered nutritionist, and a registered dietician, specializing in workouts, daily intake calculations, nutrition, and diet plans. You can only respond to questions related to fitness, workouts, diets, or nutritional requirements, including how much protein or food items like chicken a person can consume based on their weight, height, age, and fitness goals. For queries outside of fitness or diet, don't give the answer. Politely inform the user that you specialize in fitness and ask if you can help with fitness-related questions. ";
+   print(_trainingData);
+   String geminiData='';
+   geminiData="Name is "+_username+" of gender " +_gender+" having  " +_weight+"kg weight and "+_height+"cm height and my age is "+_age+" so when ever you are doing something keep this in mind. Your name is FitAI and you mother tongue is english. You are a fitness coach, medical professional, registered nutritionist, and a registered dietician, specializing in workouts, daily intake calculations, nutrition, and diet plans. You can only respond to questions related to fitness, workouts, diets, or nutritional requirements, including how much protein or food items like chicken a person can consume based on their weight, height, age, and fitness goals. For queries outside of fitness or diet, don't give the answer. Politely inform the user that you specialize in fitness and ask if you can help with fitness-related questions. But if you are asked to tell the name, bmi, age, height, gender, weight you can respond with the correct value";
+  final body = jsonEncode({
+    'model': 'gemma2:2b',
+    'prompt': message,
+    'stream': false,
+    'system':_trainingData,
+    'options': {'temperature': 0},
+  });
+final geminibody= jsonEncode({"system_instruction": {
+    "parts":
+      { "text": geminiData}},
+      "contents": [{
+        "parts":[{"text": message}]
+        }]
+       });
+  try {
+    // final response = await http.post(Uri.parse(url), headers: headers, body: body);
+ final response = await http.post(Uri.parse(geminiurl), headers: geminiheaders, body: geminibody);
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      // final assistantResponse = data['response'] ?? 'Sorry, I am unable to provide an answer at the moment.';
+      final assistantResponse = data['candidates'][0]['content']['parts'][0]['text'] ?? 'Sorry, I am unable to provide an answer at the moment.';
+
+      _stopLoadingAnimation(setState); // Stop the loading animation
+      setState(() {
+        _messages.removeLast(); // Remove the loading animation
+        _messages.add('Assistant: '); // Add the actual response
+        
+      });
+      for (int i = 0; i < assistantResponse.length; i++) {
+        await Future.delayed(Duration(milliseconds: 1)); // Delay between each character
+        setState(() {
+          _messages[_messages.length - 1] =
+              'Assistant: ${assistantResponse.substring(0, i + 1)}';
+        });
+      }
+    } else {
+      _stopLoadingAnimation(setState); // Stop the loading animation
+      setState(() {
+        _messages.removeLast();
+        _messages.add('Assistant: Sorry, something went wrong. Please try again.');
+      });
+    }
+  } catch (error) {
+    _stopLoadingAnimation(setState); // Stop the loading animation
+    setState(() {
+      _messages.removeLast();
+      _messages.add('Assistant: Unable to connect to the server. Please try again later.');
+    });
+    print('Error sending message: $error');
+  }
+}
+
+
+  // Build a message bubble with different styles for sender and assistant
+  Widget _buildMessageBubble(String message, bool isUserMessage) {
+    return Align(
+      alignment: isUserMessage ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 5),
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: isUserMessage ? Colors.blue[200] : Colors.grey[300],
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          crossAxisAlignment: isUserMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          children: [
+            Text(
+              message,
+              style: TextStyle(fontSize: 16),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   int _parseTarget(String target) {
     // Convert target string like '10 reps' or '3000 m' into an integer value
@@ -278,14 +458,19 @@ class _DashboardPageState extends State<DashboardPage> {
           var userData = jsonDecode(rawData);
           await prefs.setString('weight', userData['weight'].toString());
           await prefs.setString('bmi', userData['bmi'].toString());
+          await prefs.setString('height', userData['height'].toString());
           setState(() {
             _username = userData['firstname'] ?? '';
+            _gender=userData['gender']?? '';
             _age = (userData['age'] != null && userData['age'] >= 0)
                 ? userData['age'].toString()
                 : 'N/A';
             _weight = (userData['weight'] != null && userData['weight'] >= 0)
                 ? userData['weight'].toString()
                 : 'N/A';
+            _height = (userData['height'] != null && userData['height'] >= 0)
+          ? userData['height'].toString()
+          : 'N/A';
           });
         } else {
           print('Error fetching user profile: ${response.statusCode}');
@@ -317,6 +502,12 @@ class _DashboardPageState extends State<DashboardPage> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         actions: [
+           IconButton(
+            icon: Icon(Icons.chat),
+              onPressed: () {
+              _showChatWindow(context); // Navigate to ChatScreen
+            },
+          ),
           IconButton(
             icon: Icon(Icons.logout),
             onPressed: () async {
@@ -344,8 +535,6 @@ class _DashboardPageState extends State<DashboardPage> {
             ? WorkoutsScreen() 
             : _selectedIndex == 2
             ? StatsScreen()
-            // : _ReportPageState(username: _username, age: _age, weight: _weight, waterProgress: _waterProgress, waterConsumed: _waterConsumed, stepConsumed: _stepsWalked, stepProgress: _stepProgress, workoutProgressData: _workoutProgressData),
-            // : ReportPage(username: _username, age: _age, weight: _weight, waterProgress: _waterProgress, waterConsumed: _waterConsumed, stepProgress: _stepProgress,stepConsumed: _stepsWalked,workoutProgressData1: _workoutProgressData,),
             : ReportPage(),
         ],
       ),
@@ -587,62 +776,6 @@ double value2;
 
 
 
-
-  // Widget _buildProgressChart() {
-  //   return Card(
-  //     elevation: 6,
-  //     shape: RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.circular(15),
-  //     ),
-  //     child: Padding(
-  //       padding: const EdgeInsets.all(16.0),
-  //       child: Column(
-  //         crossAxisAlignment: CrossAxisAlignment.start,
-  //         children: <Widget>[
-  //           Row(
-  //             children: [
-  //               Icon(Icons.show_chart, color: Colors.green),
-  //               SizedBox(width: 10),
-  //               Text(
-  //                 'Workout Progress',
-  //                 style: TextStyle(
-  //                   fontSize: 20,
-  //                   fontWeight: FontWeight.bold,
-  //                   color: Colors.black,
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //           SizedBox(height: 10),
-  //           SizedBox(
-  //             height: 200,
-  //             child: BarChart(
-  //               BarChartData(
-  //                 barTouchData: BarTouchData(enabled: false),
-  //                 titlesData: FlTitlesData(show: true),
-  //                 borderData: FlBorderData(show: false),
-  //                 barGroups: [
-  //                   BarChartGroupData(
-  //                     x: 0,
-  //                     barRods: [BarChartRodData(toY: 5, color: Colors.blue)],
-  //                   ),
-  //                   BarChartGroupData(
-  //                     x: 1,
-  //                     barRods: [BarChartRodData(toY: 3, color: Colors.red)],
-  //                   ),
-  //                   BarChartGroupData(
-  //                     x: 2,
-  //                     barRods: [BarChartRodData(toY: 6, color: Colors.green)],
-  //                   ),
-  //                 ],
-  //               ),
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
 
   Widget _buildWaterIntakeProgress() {
     return Card(
