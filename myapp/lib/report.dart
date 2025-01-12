@@ -389,7 +389,14 @@ String formatSelectedDay(DateTime date) {
       appBar: AppBar(
         title: const Text('Fitness Tracker'),
       ),
-      body: SingleChildScrollView(
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('background.jpg'), // Replace with your image asset
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: SingleChildScrollView(
           child: Column(
         children: [
           Container(
@@ -441,6 +448,7 @@ String formatSelectedDay(DateTime date) {
         ],
           )
       ),
+    ),
     );
   }
 }

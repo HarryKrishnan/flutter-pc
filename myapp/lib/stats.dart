@@ -220,7 +220,16 @@ void showNotification(BuildContext context, String message, bool isSuccess) {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
+      body: Stack(
+      children: [
+        // Background Image
+        Positioned.fill(
+          child: Image.asset(
+            'background.jpg', // Replace with your image path
+            fit: BoxFit.cover,
+          ),
+        ),
+        SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -232,6 +241,8 @@ void showNotification(BuildContext context, String message, bool isSuccess) {
           ],
         ),
       ),
+      ],
+    ),
     );
   }
 

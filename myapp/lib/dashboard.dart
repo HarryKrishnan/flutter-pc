@@ -329,7 +329,16 @@ class _DashboardPageState extends State<DashboardPage> {
         elevation: 0,
         centerTitle: true,
       ),
-      body: _selectedIndex == 0 
+      body:Stack(
+        children: [
+          // Background image
+          Positioned.fill(
+            child: Image.asset(
+              'background.jpg', // Set the path to your background image
+              fit: BoxFit.cover,
+            ),
+          ),
+           _selectedIndex == 0 
           ? DashboardScreen(username: _username, age: _age, weight: _weight, waterProgress: _waterProgress, waterConsumed: _waterConsumed, stepProgress: _stepProgress,stepConsumed: _stepsWalked,workoutProgressData: _workoutProgressData,) 
          : _selectedIndex == 1 
             ? WorkoutsScreen() 
@@ -338,7 +347,8 @@ class _DashboardPageState extends State<DashboardPage> {
             // : _ReportPageState(username: _username, age: _age, weight: _weight, waterProgress: _waterProgress, waterConsumed: _waterConsumed, stepConsumed: _stepsWalked, stepProgress: _stepProgress, workoutProgressData: _workoutProgressData),
             // : ReportPage(username: _username, age: _age, weight: _weight, waterProgress: _waterProgress, waterConsumed: _waterConsumed, stepProgress: _stepProgress,stepConsumed: _stepsWalked,workoutProgressData1: _workoutProgressData,),
             : ReportPage(),
-
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
