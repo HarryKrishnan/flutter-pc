@@ -111,7 +111,7 @@ class _ReportPageState extends State<ReportPage> {
     String authHeader = 'Bearer $token'; 
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:8080/userdailydatatarget/$username/$_dateSelected'),
+        Uri.parse('http://ec2-18-234-149-163.compute-1.amazonaws.com:8080/userdailydatatarget/$username/$_dateSelected'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': authHeader,
@@ -167,7 +167,7 @@ if (response.statusCode == 200) {
     }
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:8080/userdailydata/$username/$_dateSelected'),
+        Uri.parse('http://ec2-18-234-149-163.compute-1.amazonaws.com:8080/userdailydata/$username/$_dateSelected'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': authHeader,
@@ -225,7 +225,7 @@ if (response.statusCode == 200) {
     }
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:8080/userdailydata/$username/$_dateSelected'),
+        Uri.parse('http://ec2-18-234-149-163.compute-1.amazonaws.com:8080/userdailydata/$username/$_dateSelected'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': authHeader,

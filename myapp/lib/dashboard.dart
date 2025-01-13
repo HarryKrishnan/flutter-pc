@@ -137,7 +137,7 @@ void _stopLoadingAnimation(Function setState) {
 
 // Send chat message and handle response
 Future<void> _sendChatMessage(String message, Function setState) async {
-  final url = 'http://localhost:11434/api/generate';
+  final url = 'http://ec2-18-234-149-163.compute-1.amazonaws.com:11434/api/generate';
   final geminiurl='https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent'; // Your backend URL
   final headers = {
     'Content-Type': 'application/json',
@@ -145,12 +145,13 @@ Future<void> _sendChatMessage(String message, Function setState) async {
   };
   final geminiheaders={
      'Content-Type': 'application/json', 
-    'x-goog-api-key': 'fff', 
+    'x-goog-api-key': 'AIzaSyDddz2AYvl3cI-QI6I9ngka4ZR2hNaDIlQ', //API key for gemini
   };
    _trainingData="Name is "+_username+" of gender " +_gender+" having  " +_weight+"kg weight and "+_height+"cm height and my age is "+_age+" so when ever you are doing something keep this in mind. Your name is FitAI and you mother tongue is english. You are a fitness coach, medical professional, registered nutritionist, and a registered dietician, specializing in workouts, daily intake calculations, nutrition, and diet plans. You can only respond to questions related to fitness, workouts, diets, or nutritional requirements, including how much protein or food items like chicken a person can consume based on their weight, height, age, and fitness goals. For queries outside of fitness or diet, don't give the answer. Politely inform the user that you specialize in fitness and ask if you can help with fitness-related questions. ";
-   print(_trainingData);
+  //  print(_trainingData);
    String geminiData='';
-   geminiData="Name is "+_username+" of gender " +_gender+" having  " +_weight+"kg weight and "+_height+"cm height and my age is "+_age+" so when ever you are doing something keep this in mind. Your name is FitAI and you mother tongue is english. You are a fitness coach, medical professional, registered nutritionist, and a registered dietician, specializing in workouts, daily intake calculations, nutrition, and diet plans. You can only respond to questions related to fitness, workouts, diets, or nutritional requirements, including how much protein or food items like chicken a person can consume based on their weight, height, age, and fitness goals. For queries outside of fitness or diet, don't give the answer. Politely inform the user that you specialize in fitness and ask if you can help with fitness-related questions. But if you are asked to tell the name, bmi, age, height, gender, weight you can respond with the correct value";
+   geminiData="if you are asked to tell my  name, bmi, age, height, gender, weight you can respond with the correct value.  My Name is "+_username+" of gender " +_gender+" having  " +_weight+"kg weight and "+_height+"cm height and my age is "+_age+" so when ever you are doing something keep this in mind. Your name is FitAI and you mother tongue is english. You are a fitness coach, medical professional, registered nutritionist, and a registered dietician, specializing in workouts, daily intake calculations, nutrition, and diet plans. You can only respond to questions related to fitness, workouts, diets, or nutritional requirements, including how much protein or food items like chicken a person can consume based on their weight, height, age, and fitness goals. For queries outside of fitness or diet, don't give the answer. Politely inform the user that you specialize in fitness and ask if you can help with fitness-related questions. But if you are asked to tell the name, bmi, age, height, gender, weight you can respond with the correct value";
+  print(geminiData);
   final body = jsonEncode({
     'model': 'gemma2:2b',
     'prompt': message,
@@ -289,7 +290,7 @@ final geminibody= jsonEncode({"system_instruction": {
     try {
 
             final response = await http.post(
-        Uri.parse('http://localhost:8080/userdailydatatarget/$username'),
+        Uri.parse('http://ec2-18-234-149-163.compute-1.amazonaws.com:8080/userdailydatatarget/$username'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': authHeader,
@@ -339,7 +340,7 @@ final geminibody= jsonEncode({"system_instruction": {
     }
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:8080/userdailydata/$username'),
+        Uri.parse('http://ec2-18-234-149-163.compute-1.amazonaws.com:8080/userdailydata/$username'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': authHeader,
@@ -392,7 +393,7 @@ final geminibody= jsonEncode({"system_instruction": {
     }
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:8080/userdailydata/$username'),
+        Uri.parse('http://ec2-18-234-149-163.compute-1.amazonaws.com:8080/userdailydata/$username'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': authHeader,
@@ -439,7 +440,7 @@ final geminibody= jsonEncode({"system_instruction": {
       String authHeader = 'Bearer $token';
       try {
         final response = await http.post(
-          Uri.parse('http://localhost:8080/getuser/$username'),
+          Uri.parse('http://ec2-18-234-149-163.compute-1.amazonaws.com:8080/getuser/$username'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'Authorization': authHeader,

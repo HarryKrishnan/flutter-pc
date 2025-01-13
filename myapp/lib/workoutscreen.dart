@@ -78,10 +78,10 @@ class _WorkoutsScreenState extends State<WorkoutsScreen> {
 
       String authHeader = 'Bearer $token';
       final response = await http.post(
-        Uri.parse('http://localhost:8080/getuser/$username/dietplan'),
+        Uri.parse('http://ec2-18-234-149-163.compute-1.amazonaws.com:8080/getuser/$username/dietplan'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-            'Origin': 'http://localhost:8081',
+            'Origin': 'http://ec2-18-234-149-163.compute-1.amazonaws.com:8081',
           'Authorization': authHeader,
             'Accept': '*/*',
         },
@@ -138,10 +138,10 @@ List<DietDetail> parseDietData(Map<String, dynamic> data) {
 
       String authHeader = 'Bearer $token';
       final response = await http.post(
-        Uri.parse('http://localhost:8080/getuser/$username/cardioplan'),
+        Uri.parse('http://ec2-18-234-149-163.compute-1.amazonaws.com:8080/getuser/$username/cardioplan'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-            'Origin': 'http://localhost:8081',
+            'Origin': 'http://ec2-18-234-149-163.compute-1.amazonaws.com:8081',
           'Authorization': authHeader,
             'Accept': '*/*',
         },
@@ -177,10 +177,10 @@ List<DietDetail> parseDietData(Map<String, dynamic> data) {
 
       String authHeader = 'Bearer $token';
       final response = await http.post(
-        Uri.parse('http://localhost:8080/getuser/$username/workoutplan'),
+        Uri.parse('http://ec2-18-234-149-163.compute-1.amazonaws.com:8080/getuser/$username/workoutplan'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-            'Origin': 'http://localhost:8081',
+            'Origin': 'http://ec2-18-234-149-163.compute-1.amazonaws.com:8081',
           'Authorization': authHeader,
             'Accept': '*/*',
         },
