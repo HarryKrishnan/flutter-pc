@@ -137,7 +137,7 @@ void _stopLoadingAnimation(Function setState) {
 
 // Send chat message and handle response
 Future<void> _sendChatMessage(String message, Function setState) async {
-  final url = 'http://ec2-18-234-149-163.compute-1.amazonaws.com:11434/api/generate';
+  final url = 'http://localhost:11434/api/generate';
   final geminiurl='https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent'; // Your backend URL
   final headers = {
     'Content-Type': 'application/json',
@@ -290,7 +290,7 @@ final geminibody= jsonEncode({"system_instruction": {
     try {
 
             final response = await http.post(
-        Uri.parse('http://ec2-18-234-149-163.compute-1.amazonaws.com:8080/userdailydatatarget/$username'),
+        Uri.parse('http://localhost:8080/userdailydatatarget/$username'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': authHeader,
@@ -340,7 +340,7 @@ final geminibody= jsonEncode({"system_instruction": {
     }
     try {
       final response = await http.post(
-        Uri.parse('http://ec2-18-234-149-163.compute-1.amazonaws.com:8080/userdailydata/$username'),
+        Uri.parse('http://localhost:8080/userdailydata/$username'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': authHeader,
@@ -393,7 +393,7 @@ final geminibody= jsonEncode({"system_instruction": {
     }
     try {
       final response = await http.post(
-        Uri.parse('http://ec2-18-234-149-163.compute-1.amazonaws.com:8080/userdailydata/$username'),
+        Uri.parse('http://localhost:8080/userdailydata/$username'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': authHeader,
@@ -440,7 +440,7 @@ final geminibody= jsonEncode({"system_instruction": {
       String authHeader = 'Bearer $token';
       try {
         final response = await http.post(
-          Uri.parse('http://ec2-18-234-149-163.compute-1.amazonaws.com:8080/getuser/$username'),
+          Uri.parse('http://localhost:8080/getuser/$username'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'Authorization': authHeader,
@@ -611,78 +611,73 @@ final List<Map<String, dynamic>> workoutProgressData;
       ),
     );
   }
-
-  Widget _buildWorkoutProgressCharts(BuildContext context) {
-double value1;
-double value2;
-
-
-    
+Widget _buildWorkoutProgressCharts(BuildContext context) {
   return Wrap(
     spacing: 16.0, // Horizontal spacing between charts
     runSpacing: 16.0, // Vertical spacing between rows of charts
     children: workoutProgressData.map((workout) {
-      if (workout['progress'] >= workout['target']) {
-  value1 = workout['progress'].toDouble(); // Completed progress
-  value2 = 0; // No remaining progress
-} else {
-  value1 = workout['progress'].toDouble(); // Completed progress
-  value2 = (workout['target'] - workout['progress']).toDouble(); // Remaining progress
-}
+      double progress = double.tryParse(workout['progress'].toString()) ?? 0.0;
+      double target = double.tryParse(workout['target'].toString()) ?? 0.0;
+      double value1 = (progress >= target) ? progress : progress;
+      double value2 = (progress >= target) ? 0.0 : (target - progress);
+
       return SizedBox(
-        width: MediaQuery.of(context).size.width / 2 - 24, // Width to fit two charts in a row
+        width: MediaQuery.of(context).size.width / 2 - 24, // Fit two charts in a row
         child: Card(
           elevation: 6,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  children: [
-                    Icon(Icons.pie_chart, color: workout['color']),
-                    SizedBox(width: 10),
-                    Text(
-                      '${workout['name']} ',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
+          child: SizedBox( // Ensure equal height for all items
+            height: 250, // Adjust this height as needed
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    children: [
+                      Icon(Icons.pie_chart, color: workout['color']),
+                      SizedBox(width: 10),
+                      Expanded( 
+                        child: Text(
+                          '${workout['name']}',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                          softWrap: true, 
+                          maxLines: 3, // Keep text limited to 2 lines for uniform height
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Expanded( // This makes sure the pie chart expands properly without breaking layout
+                    child: PieChart(
+                      PieChartData(
+                        sections: [
+                          PieChartSectionData(
+                            value: value1,
+                            color: workout['color'],
+                            radius: 35,
+                            titleStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                          ),
+                          PieChartSectionData(
+                            value: value2,
+                            color: Colors.grey.shade300,
+                            radius: 33,
+                          ),
+                        ],
+                        centerSpaceRadius: 38,
+                        sectionsSpace: 2,
                       ),
                     ),
-                  ],
-                ),
-                
-                SizedBox(height: 10),
-                SizedBox(
-                  height: 150,
-                  child: PieChart(
-                    PieChartData(
-                      sections: [
-                        // done 121, taget: 30
-                        PieChartSectionData(
-                          
-                          value: value1,
-                          // title: '${workout['progress'].toStringAsFixed(1)}%',
-                          color: workout['color'],
-                          radius: 35,
-                          titleStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                        ),
-                        PieChartSectionData(
-                          value: value2,
-                          color: Colors.grey.shade300,
-                          radius: 35,
-                        ),
-                      ],
-                      centerSpaceRadius: 40,
-                      sectionsSpace: 2,
-                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

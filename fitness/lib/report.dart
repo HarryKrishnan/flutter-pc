@@ -392,7 +392,7 @@ String formatSelectedDay(DateTime date) {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('background.jpg'), // Replace with your image asset
+            image: AssetImage('assets/background.jpg'), // Replace with your image asset
             fit: BoxFit.cover,
           ),
         ),

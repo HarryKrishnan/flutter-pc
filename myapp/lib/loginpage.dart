@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
   // var dio = Dio();
-  // dio.options.baseUrl = 'http://ec2-18-234-149-163.compute-1.amazonaws.com:8080';
+  // dio.options.baseUrl = 'http://localhost:8080';
 //  var appDocDir = await getTemporaryDirectory();
   // var cookieJar = PersistCookieJar(storage: FileStorage(appDocDir.path));
     // dio.options.headers['Content-Type'] = 'application/json';
@@ -46,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://ec2-18-234-149-163.compute-1.amazonaws.com:8080/login'),
+        Uri.parse('http://localhost:8080/login'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Accept': 'application/json',
@@ -75,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
     //   },
     //   ),
     // );
-  //    var cookies = await cookieJar.loadForRequest(Uri.parse('http://ec2-18-234-149-163.compute-1.amazonaws.com:8080/login'));
+  //    var cookies = await cookieJar.loadForRequest(Uri.parse('http://localhost:8080/login'));
   // print(cookies); // This will show the Set-Cookie header
        // Print response details for debugging
     print('Response status: ${response.statusCode}');
@@ -205,7 +205,7 @@ class _LoginPageState extends State<LoginPage> {
       body: Container(
   decoration: BoxDecoration(
     image: DecorationImage(
-      image: AssetImage('background_login.jpg'),
+      image: AssetImage('pexels-823sl-2294361.jpg'),
       fit: BoxFit.cover, // Adjust the image to cover the entire background
     ),
   ),

@@ -527,7 +527,7 @@ print("indasssssssssssssshboard");
           // Background image
           Positioned.fill(
             child: Image.asset(
-              'background.jpg', // Set the path to your background image
+              'assets/background.jpg', // Set the path to your background image
               fit: BoxFit.cover,
             ),
           ),

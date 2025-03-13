@@ -65,10 +65,10 @@ class _StatsScreenState extends State<StatsScreen> {
     String authHeader = 'Bearer $token'; 
       // String authHeader = 'Bearer $token';
       final response = await http.post(
-        Uri.parse('http://ec2-18-234-149-163.compute-1.amazonaws.com:8080/getuser/$username/cardioplan'),
+        Uri.parse('http://localhost:8080/getuser/$username/cardioplan'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-            'Origin': 'http://ec2-18-234-149-163.compute-1.amazonaws.com:8081',
+            'Origin': 'http://localhost:8081',
           'Authorization': authHeader,
             'Accept': '*/*',
         },
@@ -168,10 +168,10 @@ void showNotification(BuildContext context, String message, bool isSuccess) {
     String authHeader = 'Bearer $token'; 
       // String authHeader = 'Bearer $token';
       final response = await http.post(
-        Uri.parse('http://ec2-18-234-149-163.compute-1.amazonaws.com:8080/getuser/$username/workoutplan'),
+        Uri.parse('http://localhost:8080/getuser/$username/workoutplan'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-            'Origin': 'http://ec2-18-234-149-163.compute-1.amazonaws.com:8081',
+            'Origin': 'http://localhost:8081',
           'Authorization': authHeader,
             'Accept': '*/*',
         },
@@ -236,7 +236,9 @@ void showNotification(BuildContext context, String message, bool isSuccess) {
           children: <Widget>[
             _buildMetricsRow(),
             SizedBox(height: 20),
-            _buildAnotherMetricsRow(),
+            _buildCardioMetric(),
+            SizedBox(height: 20),
+                        _buildStrengthMetric(),
             SizedBox(height: 20),
           ],
         ),
@@ -346,21 +348,58 @@ void showNotification(BuildContext context, String message, bool isSuccess) {
     );
   }
 
-  Widget _buildCardioInputField(String label, String currentValue) {
-    TextEditingController controller = TextEditingController(); // Set initial value
+  // Widget _buildCardioInputField(String label, String currentValue) {
+  //   TextEditingController controller = TextEditingController(); // Set initial value
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label, // Display the label above the input box
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-              TextField(
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //     children: <Widget>[
+  //       Expanded(
+  //         child: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: [
+  //             Text(
+  //               label, // Display the label above the input box
+  //               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+  //             ),
+  //             TextField(
+  //               controller: controller,
+  //               decoration: InputDecoration(
+  //                 hintText: 'Enter $label done',
+  //                 border: OutlineInputBorder(),
+  //                 contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+  //               ),
+  //               keyboardType: TextInputType.number,
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //       SizedBox(width: 10),
+  //       ElevatedButton(     
+  //         onPressed: () =>  {_submitCardioValue(label, controller.text),controller.clear()},
+  //         style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, foregroundColor: Colors.white),
+  //         child: Text('Save'),
+  //       ),
+  //     ],
+  //   );
+  // }
+Widget _buildCardioInputField(String label, String currentValue) {
+  TextEditingController controller = TextEditingController();
+
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
+        SizedBox(height: 5),
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
                 controller: controller,
                 decoration: InputDecoration(
                   hintText: 'Enter $label done',
@@ -369,18 +408,22 @@ void showNotification(BuildContext context, String message, bool isSuccess) {
                 ),
                 keyboardType: TextInputType.number,
               ),
-            ],
-          ),
-        ),
-        SizedBox(width: 10),
-        ElevatedButton(     
-          onPressed: () =>  {_submitCardioValue(label, controller.text),controller.clear()},
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, foregroundColor: Colors.white),
-          child: Text('Save'),
+            ),
+            SizedBox(width: 10),
+            ElevatedButton(
+              onPressed: () {
+                _submitCardioValue(label, controller.text);
+                controller.clear();
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, foregroundColor: Colors.white),
+              child: Text('Save'),
+            ),
+          ],
         ),
       ],
-    );
-  }
+    ),
+  );
+}
 
    Widget _buildStrengthMetric() {
     return Card(
@@ -484,7 +527,7 @@ void showNotification(BuildContext context, String message, bool isSuccess) {
 assert(myInt is int);
     String authHeader = 'Bearer $token'; 
     final response = await http.post(
-      Uri.parse('http://ec2-18-234-149-163.compute-1.amazonaws.com:8080/userinput/$username'),
+      Uri.parse('http://localhost:8080/userinput/$username'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': authHeader,
@@ -536,7 +579,7 @@ assert(myInt is int);
 assert(myInt is int);
     String authHeader = 'Bearer $token'; 
     final response = await http.post(
-      Uri.parse('http://ec2-18-234-149-163.compute-1.amazonaws.com:8080/userinput/$username'),
+      Uri.parse('http://localhost:8080/userinput/$username'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': authHeader,
@@ -573,7 +616,7 @@ assert(myInt is int);
 assert(myInt is int);
     String authHeader = 'Bearer $token'; 
     final response = await http.post(
-      Uri.parse('http://ec2-18-234-149-163.compute-1.amazonaws.com:8080/userinput/$username'),
+      Uri.parse('http://localhost:8080/userinput/$username'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': authHeader,
@@ -611,7 +654,7 @@ assert(myInt is int);
 assert(myInt is int);
     String authHeader = 'Bearer $token'; 
     final response = await http.post(
-      Uri.parse('http://ec2-18-234-149-163.compute-1.amazonaws.com:8080/userinput/$username'),
+      Uri.parse('http://localhost:8080/userinput/$username'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': authHeader,

@@ -78,10 +78,10 @@ class _WorkoutsScreenState extends State<WorkoutsScreen> {
 
       String authHeader = 'Bearer $token';
       final response = await http.post(
-        Uri.parse('http://ec2-18-234-149-163.compute-1.amazonaws.com:8080/getuser/$username/dietplan'),
+        Uri.parse('http://localhost:8080/getuser/$username/dietplan'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-            'Origin': 'http://ec2-18-234-149-163.compute-1.amazonaws.com:8081',
+            'Origin': 'http://localhost:8081',
           'Authorization': authHeader,
             'Accept': '*/*',
         },
@@ -138,10 +138,10 @@ List<DietDetail> parseDietData(Map<String, dynamic> data) {
 
       String authHeader = 'Bearer $token';
       final response = await http.post(
-        Uri.parse('http://ec2-18-234-149-163.compute-1.amazonaws.com:8080/getuser/$username/cardioplan'),
+        Uri.parse('http://localhost:8080/getuser/$username/cardioplan'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-            'Origin': 'http://ec2-18-234-149-163.compute-1.amazonaws.com:8081',
+            'Origin': 'http://localhost:8081',
           'Authorization': authHeader,
             'Accept': '*/*',
         },
@@ -177,10 +177,10 @@ List<DietDetail> parseDietData(Map<String, dynamic> data) {
 
       String authHeader = 'Bearer $token';
       final response = await http.post(
-        Uri.parse('http://ec2-18-234-149-163.compute-1.amazonaws.com:8080/getuser/$username/workoutplan'),
+        Uri.parse('http://localhost:8080/getuser/$username/workoutplan'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-            'Origin': 'http://ec2-18-234-149-163.compute-1.amazonaws.com:8081',
+            'Origin': 'http://localhost:8081',
           'Authorization': authHeader,
             'Accept': '*/*',
         },
@@ -354,12 +354,12 @@ List<DietDetail> parseDietData(Map<String, dynamic> data) {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Icon(Icons.local_drink, color: Colors.blueAccent, size: 30),
+                Icon(Icons.local_drink, color: Colors.blueAccent, size: 20),
                 SizedBox(width: 10),
                 Text(
                   'Water Target',
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 12,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
@@ -392,12 +392,12 @@ List<DietDetail> parseDietData(Map<String, dynamic> data) {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Icon(Icons.directions_walk, color: Colors.green, size: 30),
+                Icon(Icons.directions_walk, color: Colors.green, size: 20),
                 SizedBox(width: 10),
                 Text(
                   'Steps Required',
                   style: TextStyle(
-                    fontSize: 13,
+                    fontSize: 12,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
@@ -436,12 +436,12 @@ List<DietDetail> parseDietData(Map<String, dynamic> data) {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Icon(icon, color: color, size: 30),
+                Icon(icon, color: color, size: 20),
                 SizedBox(width: 10),
                 Text(
                   title,
                   style: TextStyle(
-                    fontSize: 22,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
@@ -474,12 +474,12 @@ List<DietDetail> parseDietData(Map<String, dynamic> data) {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Icon(icon, color: color, size: 30),
+                Icon(icon, color: color, size: 20),
                 SizedBox(width: 10),
                 Text(
                   title,
                   style: TextStyle(
-                    fontSize: 22,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
