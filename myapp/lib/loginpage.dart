@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'global.dart';
+import 'firestore_service.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:path_provider/path_provider.dart';
@@ -23,6 +24,21 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final CookieJar cookieJar = PersistCookieJar(); // Create a persistent cookie jar
+
+final FirestoreService _firestoreService = FirestoreService();
+
+  @override
+  void initState() {
+    super.initState();
+    fetchIam();
+  }
+
+  void fetchIam() async {
+    String? value = await _firestoreService.fetchAndSetIam();
+    setState(() {
+      ec2host = value;
+    });
+  }
 
   Future<void> _login() async {
     final username = _usernameController.text.trim();
@@ -47,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       final response = await http.post(
-        Uri.parse(ec2host+':8080/login'),
+        Uri.parse('$ec2host:8080/login'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Accept': 'application/json',

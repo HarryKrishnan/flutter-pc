@@ -8,10 +8,12 @@ import 'package:myapp/authservice.dart';
 import 'package:myapp/report.dart';
 import 'package:myapp/stats.dart';
 import 'global.dart';
+import 'firestore_service.dart';
 
 import 'package:myapp/workoutscreen.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -34,19 +36,48 @@ class _DashboardPageState extends State<DashboardPage> {
      double waterIntake = 0;
    double stepTarget = 0;
    int _stepsWalked =0;
+final FirestoreService _firestoreService = FirestoreService();
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   fetchIam();
+  // }
+
 
   List<Map<String, dynamic>> _workoutProgressData = [];
 List<String> _messages = []; // Store chat messages
   TextEditingController _chatController = TextEditingController();
-
+  bool _isLoading = true; // Flag to track loading state
   @override
   void initState() {
     super.initState();
+        fetchIam();
+    setState(() {
+      _isLoading = false; // Data is now loaded
+    });
     _fetchUserProfile();
     _fetchWaterIntakeData(); // Fetch water intake data on initialization
     _fetchStepstakeData();
     _fetchWorkoutProgressData();
+
   }
+    void fetchIam() async {
+      if (ec2host != null && ec2host!.isNotEmpty) return;
+    String? value = await _firestoreService.fetchAndSetIam();
+    if (value != null) {
+    setState(() {
+      ec2host = value;
+    });
+   WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => DashboardPage()),
+      );
+    });
+  }
+  }
+  
 // Method to show the floating chat window
  
 // Method to send the chat message to the backend
@@ -291,7 +322,7 @@ final geminibody= jsonEncode({"system_instruction": {
     try {
 
             final response = await http.post(
-        Uri.parse(ec2host+':8080/userdailydatatarget/$username'),
+        Uri.parse('$ec2host:8080/userdailydatatarget/$username'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': authHeader,
@@ -341,7 +372,7 @@ final geminibody= jsonEncode({"system_instruction": {
     }
     try {
       final response = await http.post(
-        Uri.parse(ec2host+':8080/userdailydata/$username'),
+        Uri.parse('$ec2host:8080/userdailydata/$username'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': authHeader,
@@ -394,7 +425,7 @@ final geminibody= jsonEncode({"system_instruction": {
     }
     try {
       final response = await http.post(
-        Uri.parse(ec2host+':8080/userdailydata/$username'),
+        Uri.parse('$ec2host:8080/userdailydata/$username'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': authHeader,
@@ -441,7 +472,7 @@ final geminibody= jsonEncode({"system_instruction": {
       String authHeader = 'Bearer $token';
       try {
         final response = await http.post(
-          Uri.parse(ec2host+':8080/getuser/$username'),
+          Uri.parse('$ec2host:8080/getuser/$username'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'Authorization': authHeader,
@@ -497,6 +528,11 @@ final geminibody= jsonEncode({"system_instruction": {
 
   @override
   Widget build(BuildContext context) {
+     if (_isLoading) {
+      return Scaffold(
+        body: Center(child: CircularProgressIndicator()), // Show loading spinner
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(

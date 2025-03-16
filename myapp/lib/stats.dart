@@ -66,7 +66,7 @@ class _StatsScreenState extends State<StatsScreen> {
     String authHeader = 'Bearer $token'; 
       // String authHeader = 'Bearer $token';
       final response = await http.post(
-        Uri.parse(ec2host+':8080/getuser/$username/cardioplan'),
+        Uri.parse('$ec2host:8080/getuser/$username/cardioplan'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
             'Origin': 'http://localhost:8081',
@@ -169,7 +169,7 @@ void showNotification(BuildContext context, String message, bool isSuccess) {
     String authHeader = 'Bearer $token'; 
       // String authHeader = 'Bearer $token';
       final response = await http.post(
-        Uri.parse(ec2host+':8080/getuser/$username/workoutplan'),
+        Uri.parse('$ec2host:8080/getuser/$username/workoutplan'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
             'Origin': 'http://localhost:8081',
@@ -528,7 +528,7 @@ Widget _buildCardioInputField(String label, String currentValue) {
 assert(myInt is int);
     String authHeader = 'Bearer $token'; 
     final response = await http.post(
-      Uri.parse(ec2host+':8080/userinput/$username'),
+      Uri.parse('$ec2host:8080/userinput/$username'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': authHeader,
@@ -580,7 +580,7 @@ assert(myInt is int);
 assert(myInt is int);
     String authHeader = 'Bearer $token'; 
     final response = await http.post(
-      Uri.parse(ec2host+':8080/userinput/$username'),
+      Uri.parse('$ec2host:8080/userinput/$username'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': authHeader,
@@ -617,7 +617,7 @@ assert(myInt is int);
 assert(myInt is int);
     String authHeader = 'Bearer $token'; 
     final response = await http.post(
-      Uri.parse(ec2host+':8080/userinput/$username'),
+      Uri.parse('$ec2host:8080/userinput/$username'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': authHeader,
@@ -655,7 +655,7 @@ assert(myInt is int);
 assert(myInt is int);
     String authHeader = 'Bearer $token'; 
     final response = await http.post(
-      Uri.parse(ec2host+':8080/userinput/$username'),
+      Uri.parse('$ec2host:8080/userinput/$username'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': authHeader,

@@ -1,16 +1,26 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/authservice.dart';
 import 'package:myapp/dashboard.dart';
 import 'package:myapp/loginpage.dart';
 import 'package:myapp/report.dart';
+import 'package:get/get.dart';
 import 'package:myapp/stats.dart';
+import 'firebase_options.dart';
 import 'package:myapp/signinpage.dart';
 import 'package:myapp/workoutscreen.dart';
+import 'firestore_service.dart';
 
-void main() {
+
+// void main() {
+//   runApp(MyApp());
+// }
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+ await Firebase.initializeApp(options: firebaseConfig);  
+  await FirestoreService().fetchAndSetIam();
   runApp(MyApp());
 }
-
 class MyApp extends StatelessWidget {
   final AuthService _authService = AuthService();
 
@@ -36,7 +46,7 @@ class MyApp extends StatelessWidget {
               return DashboardPage();
             } else {
               // If not signed in, navigate to the signup page
-              return SignupPage();
+              return LoginPage();
             }
           },
         ),
@@ -53,6 +63,7 @@ class MyApp extends StatelessWidget {
 
 
 class ProtectedRoute extends StatelessWidget {
+  
   final Widget child;
 
   const ProtectedRoute({required this.child, Key? key}) : super(key: key);

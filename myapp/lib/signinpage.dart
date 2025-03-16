@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'global.dart';
+import 'firestore_service.dart';
+
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -24,14 +26,27 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
+final FirestoreService _firestoreService = FirestoreService();
+
+
+
+
+
   String? _errorMessage;
   bool _signupSuccessful = false;
 
   @override
   void initState() {
     super.initState();
+    fetchIam();
     _heightController.addListener(_calculateBMI);
     _weightController.addListener(_calculateBMI);
+  }
+  void fetchIam() async {
+    String? value = await _firestoreService.fetchAndSetIam();
+    setState(() {
+      ec2host = value;
+    });
   }
 
   void _calculateBMI() {
@@ -86,7 +101,7 @@ class _SignupPageState extends State<SignupPage> {
 
     try {
       final response = await http.post(
-        Uri.parse(ec2host+':8080/signup'),
+        Uri.parse('$ec2host:8080/signup'),
         headers: {
           'Content-Type': 'application/json',
         },

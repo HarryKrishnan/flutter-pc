@@ -79,7 +79,7 @@ class _WorkoutsScreenState extends State<WorkoutsScreen> {
 
       String authHeader = 'Bearer $token';
       final response = await http.post(
-        Uri.parse(ec2host+':8080/getuser/$username/dietplan'),
+        Uri.parse('$ec2host:8080/getuser/$username/dietplan'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
             'Origin': 'http://localhost:8081',
@@ -139,7 +139,7 @@ List<DietDetail> parseDietData(Map<String, dynamic> data) {
 
       String authHeader = 'Bearer $token';
       final response = await http.post(
-        Uri.parse(ec2host+':8080/getuser/$username/cardioplan'),
+        Uri.parse('$ec2host:8080/getuser/$username/cardioplan'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
             'Origin': 'http://localhost:8081',
@@ -178,7 +178,7 @@ List<DietDetail> parseDietData(Map<String, dynamic> data) {
 
       String authHeader = 'Bearer $token';
       final response = await http.post(
-        Uri.parse(ec2host+':8080/getuser/$username/workoutplan'),
+        Uri.parse('$ec2host:8080/getuser/$username/workoutplan'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
             'Origin': 'http://localhost:8081',
