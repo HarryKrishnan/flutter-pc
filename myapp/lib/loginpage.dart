@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'global.dart';
+import 'authservice.dart';
+import 'firestore_service.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:path_provider/path_provider.dart';
@@ -22,6 +25,21 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final CookieJar cookieJar = PersistCookieJar(); // Create a persistent cookie jar
+
+final FirestoreService _firestoreService = FirestoreService();
+
+  @override
+  void initState() {
+    super.initState();
+    fetchIam();
+  }
+
+  void fetchIam() async {
+    String? value = await _firestoreService.fetchAndSetIam();
+    setState(() {
+      ec2host = value;
+    });
+  }
 
   Future<void> _login() async {
     final username = _usernameController.text.trim();
@@ -46,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:8080/login'),
+        Uri.parse('$ec2host:8080/login'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Accept': 'application/json',
@@ -85,6 +103,8 @@ class _LoginPageState extends State<LoginPage> {
       if (response.statusCode == 200) {
         Map<String, dynamic> responseData = jsonDecode(response.body);
         String token = responseData['token'];
+        final AuthService _authService = AuthService();
+        _authService.saveToken(responseData['token']);
         // String username1 = '$username'; 
         // Successful login
         // Save the cookies returned in the response
@@ -205,7 +225,7 @@ class _LoginPageState extends State<LoginPage> {
       body: Container(
   decoration: BoxDecoration(
     image: DecorationImage(
-      image: AssetImage('pexels-823sl-2294361.jpg'),
+      image: AssetImage('assets/pexels-823sl-2294361.jpg'),
       fit: BoxFit.cover, // Adjust the image to cover the entire background
     ),
   ),

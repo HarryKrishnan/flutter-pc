@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'global.dart';
 
 class StatsScreen extends StatefulWidget {
   const StatsScreen({super.key});
@@ -65,7 +66,7 @@ class _StatsScreenState extends State<StatsScreen> {
     String authHeader = 'Bearer $token'; 
       // String authHeader = 'Bearer $token';
       final response = await http.post(
-        Uri.parse('http://localhost:8080/getuser/$username/cardioplan'),
+        Uri.parse('$ec2host:8080/getuser/$username/cardioplan'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
             'Origin': 'http://localhost:8081',
@@ -168,7 +169,7 @@ void showNotification(BuildContext context, String message, bool isSuccess) {
     String authHeader = 'Bearer $token'; 
       // String authHeader = 'Bearer $token';
       final response = await http.post(
-        Uri.parse('http://localhost:8080/getuser/$username/workoutplan'),
+        Uri.parse('$ec2host:8080/getuser/$username/workoutplan'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
             'Origin': 'http://localhost:8081',
@@ -225,7 +226,7 @@ void showNotification(BuildContext context, String message, bool isSuccess) {
         // Background Image
         Positioned.fill(
           child: Image.asset(
-            'background.jpg', // Replace with your image path
+            'assets/background.jpg', // Replace with your image path
             fit: BoxFit.cover,
           ),
         ),
@@ -527,7 +528,7 @@ Widget _buildCardioInputField(String label, String currentValue) {
 assert(myInt is int);
     String authHeader = 'Bearer $token'; 
     final response = await http.post(
-      Uri.parse('http://localhost:8080/userinput/$username'),
+      Uri.parse('$ec2host:8080/userinput/$username'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': authHeader,
@@ -579,7 +580,7 @@ assert(myInt is int);
 assert(myInt is int);
     String authHeader = 'Bearer $token'; 
     final response = await http.post(
-      Uri.parse('http://localhost:8080/userinput/$username'),
+      Uri.parse('$ec2host:8080/userinput/$username'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': authHeader,
@@ -616,7 +617,7 @@ assert(myInt is int);
 assert(myInt is int);
     String authHeader = 'Bearer $token'; 
     final response = await http.post(
-      Uri.parse('http://localhost:8080/userinput/$username'),
+      Uri.parse('$ec2host:8080/userinput/$username'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': authHeader,
@@ -654,7 +655,7 @@ assert(myInt is int);
 assert(myInt is int);
     String authHeader = 'Bearer $token'; 
     final response = await http.post(
-      Uri.parse('http://localhost:8080/userinput/$username'),
+      Uri.parse('$ec2host:8080/userinput/$username'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': authHeader,
