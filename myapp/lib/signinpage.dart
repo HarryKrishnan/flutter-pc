@@ -135,7 +135,7 @@ final FirestoreService _firestoreService = FirestoreService();
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("pexels-pixabay-163351.jpg"),
+                image: AssetImage("assets/pexels-pixabay-163351.jpg"),
                 fit: BoxFit.cover,
               ),
             ),

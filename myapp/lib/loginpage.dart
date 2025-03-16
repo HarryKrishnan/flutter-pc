@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'global.dart';
+import 'authservice.dart';
 import 'firestore_service.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
@@ -102,6 +103,8 @@ final FirestoreService _firestoreService = FirestoreService();
       if (response.statusCode == 200) {
         Map<String, dynamic> responseData = jsonDecode(response.body);
         String token = responseData['token'];
+        final AuthService _authService = AuthService();
+        _authService.saveToken(responseData['token']);
         // String username1 = '$username'; 
         // Successful login
         // Save the cookies returned in the response
@@ -222,7 +225,7 @@ final FirestoreService _firestoreService = FirestoreService();
       body: Container(
   decoration: BoxDecoration(
     image: DecorationImage(
-      image: AssetImage('pexels-823sl-2294361.jpg'),
+      image: AssetImage('assets/pexels-823sl-2294361.jpg'),
       fit: BoxFit.cover, // Adjust the image to cover the entire background
     ),
   ),

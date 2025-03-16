@@ -335,18 +335,40 @@ double value2;
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Row(
-                  children: [
-                    Icon(Icons.pie_chart, color: workout['color']),
-                    SizedBox(width: 10),
-                    Text(
-                      '${workout['name']} ',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
+                  // children: [
+                  //   Icon(Icons.pie_chart, color: workout['color']),
+                  //   SizedBox(width: 10),
+                  //   Text(
+                  //     '${workout['name']} ',
+                  //     style: TextStyle(
+                  //       fontSize: 12,
+                  //       fontWeight: FontWeight.bold,
+                  //       color: Colors.black,
+                  //     ),
+                  //     //  overflow: TextOverflow.ellipsis,
+                  //     //   maxLines: 1,
+                  //      softWrap: true,
+                  //       maxLines: 4, // Keep text limited to 2 lines for uniform height
+                  //       overflow: TextOverflow.ellipsis,
+                  //   ),
+                  // ],
+                    children: [
+    Icon(Icons.pie_chart, color: workout['color']),
+    SizedBox(width: 10),
+    Expanded( // Allow text to wrap within available space
+      child: Text(
+        '${workout['name']} ',
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+        softWrap: true,
+        maxLines: 3, // Limit text to 2 lines for uniform height
+        overflow: TextOverflow.ellipsis, // Add ellipsis if text overflows
+      ),
+    ),
+  ],
                 ),
                 SizedBox(height: 10),
                 SizedBox(
@@ -361,14 +383,15 @@ double value2;
                           color: workout['color'],
                           radius: 35,
                           titleStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                          
                         ),
                         PieChartSectionData(
                           value: value2,
                           color: Colors.grey.shade300,
-                          radius: 35,
+                          radius: 33,
                         ),
                       ],
-                      centerSpaceRadius: 40,
+                      centerSpaceRadius: 38,
                       sectionsSpace: 2,
                     ),
                   ),
@@ -393,7 +416,7 @@ String formatSelectedDay(DateTime date) {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('background.jpg'), // Replace with your image asset
+            image: AssetImage('assets/background.jpg'), // Replace with your image asset
             fit: BoxFit.cover,
           ),
         ),

@@ -226,7 +226,7 @@ void showNotification(BuildContext context, String message, bool isSuccess) {
         // Background Image
         Positioned.fill(
           child: Image.asset(
-            'background.jpg', // Replace with your image path
+            'assets/background.jpg', // Replace with your image path
             fit: BoxFit.cover,
           ),
         ),

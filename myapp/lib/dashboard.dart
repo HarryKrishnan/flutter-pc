@@ -77,71 +77,142 @@ List<String> _messages = []; // Store chat messages
     });
   }
   }
-  
+  final ScrollController _scrollController = ScrollController();
 // Method to show the floating chat window
- 
-// Method to send the chat message to the backend
-void _showChatWindow(BuildContext context) {
+ void _showChatWindow(BuildContext context) {
   showModalBottomSheet(
     context: context,
-    isScrollControlled: true,
+    isScrollControlled: true, // Important to make space for the keyboard
     builder: (BuildContext context) {
-      return StatefulBuilder(
-        builder: (BuildContext context, setState) {
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Chat messages list
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: _messages.length,
-                    itemBuilder: (context, index) {
-                      return _buildMessageBubble(_messages[index], index % 2 == 0);
-                    },
-                  ),
+      return DraggableScrollableSheet(
+        initialChildSize: 0.6, // Adjust the initial size
+        minChildSize: 0.3, // Minimum size when dragged down
+        maxChildSize: 0.9, // Maximum size (almost full screen)
+        expand: false,
+        builder: (context, scrollController) {
+          return StatefulBuilder(
+            builder: (BuildContext context, setState) {
+              return Padding(
+                padding: EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                  top: 16,
+                  bottom: MediaQuery.of(context).viewInsets.bottom, // Adjust for keyboard
                 ),
-                // Text input field
-                Row(
+                child: Column(
                   children: [
                     Expanded(
-                      child: TextField(
-                        controller: _chatController,
-                        decoration: InputDecoration(
-                          hintText: 'Type a message...',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
+                      child: ListView.builder(
+                        controller: scrollController, // Link scroll controller
+                        itemCount: _messages.length,
+                        itemBuilder: (context, index) {
+                          return _buildMessageBubble(_messages[index], index % 2 == 0);
+                        },
                       ),
                     ),
-                    IconButton(
-                      icon: Icon(Icons.send),
-                      onPressed: () {
-                        final userMessage = _chatController.text.trim();
-                        if (userMessage.isNotEmpty) {
-                          setState(() {
-                            // Add user message
-                            _messages.add('You: $userMessage');
-                            _chatController.clear();
-                            _messages.add('Assistant: '); // Placeholder for loading animation
-                          });
-                          _startLoadingAnimation(setState);
-                          _sendChatMessage(userMessage, setState);
-                        }
-                      },
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _chatController,
+                            decoration: InputDecoration(
+                              hintText: 'Type a message...',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.send),
+                          onPressed: () {
+                            final userMessage = _chatController.text.trim();
+                            if (userMessage.isNotEmpty) {
+                              setState(() {
+                                _messages.add('You: $userMessage');
+                                _chatController.clear();
+                                _messages.add('Assistant: '); // Placeholder for loading animation
+                              });
+                              _startLoadingAnimation(setState);
+                              _sendChatMessage(userMessage, setState);
+                            }
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
+              );
+            },
           );
         },
       );
     },
   );
 }
+
+// // Method to send the chat message to the backend
+// void _showChatWindow(BuildContext context) {
+//   showModalBottomSheet(
+//     context: context,
+//     isScrollControlled: true,
+//     builder: (BuildContext context) {
+//       return StatefulBuilder(
+//         builder: (BuildContext context, setState) {
+//           return Padding(
+//             padding: const EdgeInsets.all(16.0),
+//             child: Column(
+//               mainAxisSize: MainAxisSize.min,
+//               children: [
+//                 // Chat messages list
+//                 Expanded(
+//                   child: ListView.builder(
+//                     itemCount: _messages.length,
+//                     itemBuilder: (context, index) {
+//                       return _buildMessageBubble(_messages[index], index % 2 == 0);
+//                     },
+//                   ),
+//                 ),
+//                 // Text input field
+//                 Row(
+//                   children: [
+//                     Expanded(
+//                       child: TextField(
+//                         controller: _chatController,
+//                         decoration: InputDecoration(
+//                           hintText: 'Type a message...',
+//                           border: OutlineInputBorder(
+//                             borderRadius: BorderRadius.circular(20),
+//                           ),
+//                         ),
+//                       ),
+//                     ),
+//                     IconButton(
+//                       icon: Icon(Icons.send),
+//                       onPressed: () {
+//                         final userMessage = _chatController.text.trim();
+//                         if (userMessage.isNotEmpty) {
+//                           setState(() {
+//                             // Add user message
+//                             _messages.add('You: $userMessage');
+//                             _chatController.clear();
+//                             _messages.add('Assistant: '); // Placeholder for loading animation
+//                           });
+//                           _startLoadingAnimation(setState);
+//                           _sendChatMessage(userMessage, setState);
+//                         }
+//                       },
+//                     ),
+//                   ],
+//                 ),
+//               ],
+//             ),
+//           );
+//         },
+//       );
+//     },
+//   );
+// }
 
 // Start a continuous "Loading..." animation
 Timer? _loadingTimer;
@@ -563,7 +634,7 @@ final geminibody= jsonEncode({"system_instruction": {
           // Background image
           Positioned.fill(
             child: Image.asset(
-              'background.jpg', // Set the path to your background image
+              'assets/background.jpg', // Set the path to your background image
               fit: BoxFit.cover,
             ),
           ),
@@ -736,7 +807,7 @@ Widget _buildWorkoutProgressCharts(BuildContext context) {
           children: <Widget>[
             CircleAvatar(
               radius: 40,
-              backgroundImage: AssetImage('user_profile.jpg'), // Change the path as necessary
+              backgroundImage: AssetImage('assets/user_profile.jpg'), // Change the path as necessary
             ),
             SizedBox(width: 16),
             Column(
