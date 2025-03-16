@@ -7,6 +7,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:myapp/authservice.dart';
 import 'package:myapp/report.dart';
 import 'package:myapp/stats.dart';
+import 'global.dart';
 
 import 'package:myapp/workoutscreen.dart';
 import 'package:http/http.dart' as http;
@@ -290,7 +291,7 @@ final geminibody= jsonEncode({"system_instruction": {
     try {
 
             final response = await http.post(
-        Uri.parse('http://localhost:8080/userdailydatatarget/$username'),
+        Uri.parse(ec2host+':8080/userdailydatatarget/$username'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': authHeader,
@@ -340,7 +341,7 @@ final geminibody= jsonEncode({"system_instruction": {
     }
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:8080/userdailydata/$username'),
+        Uri.parse(ec2host+':8080/userdailydata/$username'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': authHeader,
@@ -393,7 +394,7 @@ final geminibody= jsonEncode({"system_instruction": {
     }
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:8080/userdailydata/$username'),
+        Uri.parse(ec2host+':8080/userdailydata/$username'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': authHeader,
@@ -440,7 +441,7 @@ final geminibody= jsonEncode({"system_instruction": {
       String authHeader = 'Bearer $token';
       try {
         final response = await http.post(
-          Uri.parse('http://localhost:8080/getuser/$username'),
+          Uri.parse(ec2host+':8080/getuser/$username'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'Authorization': authHeader,

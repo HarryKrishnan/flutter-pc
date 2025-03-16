@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'global.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -85,7 +86,7 @@ class _SignupPageState extends State<SignupPage> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:8080/signup'),
+        Uri.parse(ec2host+':8080/signup'),
         headers: {
           'Content-Type': 'application/json',
         },

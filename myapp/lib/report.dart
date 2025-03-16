@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:table_calendar/table_calendar.dart'; // Import the calendar package
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
+import 'global.dart';
 
 
 DateTime ?_selectedDay ;
@@ -111,7 +112,7 @@ class _ReportPageState extends State<ReportPage> {
     String authHeader = 'Bearer $token'; 
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:8080/userdailydatatarget/$username/$_dateSelected'),
+        Uri.parse(':8080/userdailydatatarget/$username/$_dateSelected'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': authHeader,
@@ -167,7 +168,7 @@ if (response.statusCode == 200) {
     }
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:8080/userdailydata/$username/$_dateSelected'),
+        Uri.parse(ec2host+':8080/userdailydata/$username/$_dateSelected'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': authHeader,
@@ -225,7 +226,7 @@ if (response.statusCode == 200) {
     }
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:8080/userdailydata/$username/$_dateSelected'),
+        Uri.parse(ec2host+':8080/userdailydata/$username/$_dateSelected'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': authHeader,
